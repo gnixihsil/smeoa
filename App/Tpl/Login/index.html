@@ -1,0 +1,53 @@
+<layout name='Layout/ace_page' />
+<div class="container">
+	<!-- /container -->
+	<div class="row">
+		<div class="col-xs-12 hidden-xs" style="margin-top:120px;"></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8 hidden-xs">
+			<div class="img"></div>
+		</div>
+		<div class="col-sm-4 well">
+			<div style="margin-bottom:44px;margin-top:20px;">
+					<h1 class="text-center">{:get_system_config("SYSTEM_NAME")}</h1>
+			</div>
+			<form method="post" id="form_login" class="form-horizontal">
+				<div class="form-group">
+					<label class="col-sm-3  control-label" for="emp_no">帐号：</label>
+					<div class="col-sm-9">
+						<input class="form-control" id="emp_no" name="emp_no" />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3  control-label" for="password">密码：</label>
+					<div class="col-sm-9">
+						<input class="form-control" id="password" type="password" name="password" />
+					</div>
+				</div>
+				<div class="form-group display-none">	<span class="col-sm-3  control-label"></span>
+					<div class="col-sm-9">
+						<label class="inline pull-left col-3">
+							<input class="ace" type="checkbox" name="id[]" value="{$vo.id}" />	<span class="lbl"></span>
+						</label>
+						<label for="remember-me">记住我的登录状态</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-3 col-sm-9">
+						<input type="button" value="登录" onclick="login();" class="btn btn-sm btn-primary col-10">
+					</div>
+				</div>
+			</form>
+			<p>用户名：admin 密码：admin</p>
+			<p>&nbsp;</p>
+			<p>&nbsp;</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8"><span><a href="//www.smeoa.com" target="_blank">©2012-2014 SMEOA</a> <a href="http://url.cn/KfkUFB" target="_blank">小微OA开源交流群：137109597</a></span>
+		</div>
+		<div class="col-sm-4 text-right"><span><a href="//www.smeoa.com/book/user-manual.html">文档</a> </span>&nbsp;&nbsp;&nbsp;&nbsp; <span><a title="点击这里给我发消息" href="http://wpa.qq.com/msgrd?v=3&uin=1006666005&site=qq&menu=yes" target="_blank"><img title="点击这里给我发消息" alt="点击这里给我发消息" src="http://wpa.qq.com/pa?p=2:1006666005:52" border="0" />&nbsp;在线咨询</a></span>
+		</div>
+	</div>
+</div>

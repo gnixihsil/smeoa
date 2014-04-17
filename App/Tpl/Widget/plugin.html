@@ -1,0 +1,49 @@
+
+<notempty name="widget.jquery-ui">
+	<script src="__PUBLIC__/js/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="__PUBLIC__/js/jquery.ui.touch-punch.min.js"></script>
+</notempty>
+
+<notempty name="widget.date">
+	<script src="__PUBLIC__/js/date-time/bootstrap-datepicker.min.js"></script>
+</notempty>
+
+<notempty name="widget.date-range">
+	<script src="__PUBLIC__/js/date-time/daterangepicker.min.js"></script>
+	<script src="__PUBLIC__/js/date-time/moment.min.js"></script>
+</notempty>
+
+<notempty name="widget.uploader">
+	<script type="text/javascript" src="__PUBLIC__/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/plupload/plupload.setting.js"></script>
+</notempty>
+
+<notempty name="widget.editor">
+	<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/editor/lang/zh_CN.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.setting.js"></script>
+</notempty>
+<script src="__PUBLIC__/js/jquery.gritter.min.js"></script>
+<script src="__PUBLIC__/js/bootbox.min.js"></script>
+
+<script type="text/javascript">
+		$(document).ready(function() {
+	<notempty name="widget.date">
+	$('.input-date').datepicker({
+	autoclose : true
+	})
+	</notempty>
+
+	<notempty name="widget.date-range">
+	$(".input-date-range").daterangepicker({
+	format : 'YYYY-MM-DD',
+	});
+	</notempty>
+
+	<notempty name="widget.uploader">	
+	</notempty>
+
+	<notempty name="widget.editor">
+	editor_init();
+	</notempty>
+	})</script>

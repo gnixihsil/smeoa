@@ -1,0 +1,128 @@
+<layout name='Layout/layout_main' />
+<div class="msg">
+	<form id="form_search" method='post'>
+		<input type="hidden" id="msg_id">
+		<div class="row-fluid title">
+			<span>消息</span>
+			<div class="input-append right">
+				<input type="text"  onkeydown="key_search();" name="keyword">
+				<a class="btn" type="button" onclick="btn_search();"> <i class="icon-search"></i>
+				</a>
+			</div>
+		</div>
+	</form>
+	<div class="operate">
+		<div class="left">
+			<a onclick="del()">删除</a>
+		</div>
+		<div class="right">
+			<a onclick="add()">写消息</a>
+		</div>
+	</div>
+	<table style="width:100%" class="list" >
+		<tr>
+			<th style="width:3%;vertical-align: -3px;">
+			<div class="chk_wrap" style="height:35px;margin-top:5px;">
+				<input  type="checkbox" id="select_all" value="all" onclick="select_all('msg_id')"/>
+			</div></th>
+			<notempty name="list[0].count">
+				<th style="width:10%;">
+				<nobr>
+					发送/接收
+				</nobr></th>
+				<else/>
+				<th style="width:10%;">
+				<nobr>
+					发送者
+				</nobr></th>
+			</notempty>
+			<empty name="list[0].count">
+				<th style="width:10%;">接收者</th>
+			</empty>
+			<th style="width:46%">内容 </th>
+			<th style="width:10%">
+			<nobr>
+				附件
+			</nobr></th>
+			<th  style="width:12%;">
+			<nobr>
+				时间
+			</nobr></th>
+		</tr>
+		<if condition="count($list) eq 0 ">
+			<tr>
+				<td colspan="6" style="text-align:center" ><h3>没找到相应的数据</h3></td>
+			</tr>
+	</table>
+	<else/>
+	<foreach name="list" item="vo">
+		<tr  class="<eq name="vo.read" value="1">read<else/>unread</eq>">
+			<td style="text-align: center">
+			<input name="msg_id" type="checkbox" value="{$vo.id}"/>
+			</td>
+			<td style="text-align:center">
+			<nobr>
+				{$vo.sender_name}
+			</nobr></td>
+			<empty name="vo.count">
+				<td style="text-align:center">
+				<nobr>
+					{$vo.recever_name}
+				</nobr></td>
+			</empty>
+			<td><a href="{:U('')}read/emp/<eq name='vo.sender' value='$Think.session.emp_no' >{$vo.recever}<else/>{$vo.sender}</eq>">{$vo.content|strip_tags}</a>&nbsp;
+			<notempty name="vo.count">
+				<b class="count">{$vo.count}</b>
+			</notempty></td>
+			<td style="text-align:center"> {$vo.add_file|show_file}</td>
+			<td style="text-align:center">
+			<nobr>
+				{$vo.create_time|toDate='Y-m-d'}
+			</nobr></td>
+		</tr>
+	</foreach>
+	</table>
+	<div class="operate">
+		<div class="left">
+			<span style="line-height: 23px;"class="fright ">{$page}</span>
+		</div>
+	</div>
+	</if>
+</div>
+<script type="text/javascript">
+	function add() {
+		window.open("{:U('')}add/", "_self");
+	}
+
+	function btn_search() {
+		sendForm("form_search", "{:U('')}");
+		return false;
+	}
+
+	function del() {
+		if(confirm('确定要删除吗?')){
+			sendAjax("{:U('del')}", 'id=' + $("#msg_id").val(), function(data) {
+				if (data.status) {
+					alert(data.info);
+					$("input[name='doc_id']:checkbox:checked").each(function() {
+						$(this).parent().parent().hide();
+					})
+				}
+			});
+		}
+	}
+
+
+	$(document).ready(function() {
+		$("#ok").click(function() {
+			winopen("/contact/dig4", 800, 800);
+		});
+		set_return_url();
+		$("input[name='msg_id']").click(function() {
+			$("#msg_id").val("");
+			$("input[name='msg_id']:checkbox:checked").each(function() {
+				$("#msg_id").val($("#msg_id").val() + $(this).val() + ",");
+			})
+		})
+	}); 
+</script>

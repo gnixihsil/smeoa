@@ -1,0 +1,46 @@
+<script type="text/javascript">
+	// 加载编辑器
+	function save(step) {
+		window.onbeforeunload=null;
+		$("#confirm").val("");
+		$("#confirm_wrap  span").each(function() {
+			$("#confirm").val($("#confirm").val() + $(this).attr("emp_no") + '|');
+		})
+		$("#confirm_name").val($("#confirm_wrap").html());
+		$("#consult").val("");
+		$("#consult_wrap  span").each(function() {
+			$("#consult").val($("#consult").val() + $(this).attr("emp_no") + '|');
+		})
+		$("#consult_name").val($("#consult_wrap").html());
+
+		$("#refer").val("");
+		$("#refer_wrap  span").each(function() {
+			$("#refer").val($("#refer").val() + $(this).attr("emp_no") + '|');
+		})
+		$("#refer_name").val($("#refer_wrap").html());
+
+		if ($("#confirm").val().length < 2) {
+			ui_error('请选择审批流程');
+			return false;
+		}
+		$("#step").val(step);
+		editor.sync();
+		if (check_form("form_data")) {
+			sendForm("form_data", "{:U('save')}");
+		}
+	}
+
+	function popup_confirm() {
+		winopen("{:U('popup/confirm')}", 730, 574);
+	}
+
+
+	$(document).ready(function() {
+		$("#confirm span").on("dblclick", function() {
+			$("#confirm span").last().find("b").remove();
+		});
+		$("#consult span").on("dblclick", function() {
+			$("#consult span").last().find("b").remove();
+		});
+	}); 
+</script>

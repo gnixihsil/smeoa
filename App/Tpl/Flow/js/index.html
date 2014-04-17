@@ -1,0 +1,17 @@
+<script type="text/javascript">
+	$(document).ready(function() {
+		set_return_url();
+		$(".title .dropdown-menu li").click(function() {
+			$(".list span").hide();
+			gid = $(this).attr("gid");
+			$(".title nobr").html($(this).text());
+			count = 0;
+			$(".list span div.group").each(function() {
+				if ($(this).text().indexOf(gid) >= 0) {
+					count++;
+					$(this).parents("span").show();
+				};
+			})
+		})
+	})
+</script>

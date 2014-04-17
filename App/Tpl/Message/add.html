@@ -1,0 +1,165 @@
+<layout name='Layout/layout_main' />
+<div class="mail">
+    <div class="row-fluid title">
+        <span>写消息</span>
+    </div>
+	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data">
+		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="add_file" name="add_file">
+		<input type="hidden" id="recever_list" name="recever_list">
+		<input type="hidden" id="opmode" name="opmode" value="add">
+		<div class="operate">
+			<div class="span-6 left">
+				<a href="#" onclick="go_return_url();">返回</a>
+			</div>
+			<div class="span-6 last right">
+				<a href="#"  onclick="save();">发送</a>
+			</div>
+		</div>
+		<table>
+			<tr>
+				<th style="width:70px"><a href="#" onclick="winopen('/contact/dig5',800,600);return false;" title="点击选择收件人">接收者：</a></th>
+				<td>
+				<div id="recever">
+					<div class="search drop-down-box" style="margin-top:30px;" >
+						<ul></ul>
+					</div>
+					<input class="letter left" type="text">
+					<div class="address_list last">
+						&nbsp;
+					</div>
+				</div></td>
+			</tr>
+			<tr>
+			<tr style="display:none">
+				<th style="width:70px"><a href="#" onclick="popup_contact();return false;" title="点击选择收件人">收信人：</a></th>
+				<td>
+				<div id="hid">
+					<div class="search drop-down-box" style="margin-top:30px;" >
+						<ul></ul>
+					</div>
+					<input class="letter left" type="text">
+					<div class="address_list last">
+						&nbsp;
+					</div>
+				</div></td>
+			</tr>
+			<tr>
+				<th> 内容： </th>
+				<td>				<textarea id="content" name="content" style="width:100%;height:300px;">
+                            </textarea></td>
+			</tr>
+			</tr>
+			<tr>
+				<th> 附件： </th>
+				<td>
+				<div class="hidden-phone">
+					<span id="spanButtonPlaceHolder"></span>
+				</div><div id="fsUploadProgress"></div></td>
+			</tr>
+		</table>
+	</form>
+</div>
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.js"></script>
+<script type="text/javascript">
+
+	// 加载编辑器
+	var editor;
+	$(function() {
+		editor = KindEditor.create("#content", {
+			resizeType : 1,
+			filterMode : true,
+			uploadJson : "/File/upload",
+			afterCreate : function() {
+				editor.width = "100%";
+			}
+		});
+	});
+
+	function save() {
+		if ($("#recever .address_list span").length == 0) {
+			alert("请选择接收者");
+			$("#recever input").focus();
+		} else {
+			$("#recevers_list").val("");
+			$("#recever .address_list span").each(function() {
+				alert($(this).attr("emp_no"));
+				$("#recever_list").val($("#recever_list").val() + $(this).attr("emp_no") + "|");
+			})
+		}
+		editor.sync();
+		sendForm("form_data", "{:U('save')}");
+	}
+
+
+	$(document).ready(function() {
+		editor_init();
+		uploader_init();
+
+		$("#recever span.rec_wrap span.selected :input").live("keydown", function(e) {
+			if ((e.keyCode == 46) && ($(this).parent().attr("selected") == 1)) {
+				$(this).parent().remove();
+				$("#letter").focus();
+			}
+		})
+
+		$(".letter").keyup(function(e) {
+			switch(e.keyCode) {
+				case 40:
+					var $curr = $(this).parent().find(".search li.active").next();
+					if ($curr.html() != null) {
+						$(this).parent().find(".search li").removeClass("active");
+						$curr.addClass("active");
+					}
+					break
+				case 38:
+					var $curr = $(this).parent().find(".search li.active").prev();
+					if ($curr.html() != null) {
+						$(this).parent().find(".search li").removeClass("active");
+						$curr.addClass("active");
+					}
+					break
+				case 13:
+					if ($(this).parent().find(".search ul").html() != "") {
+						html = $(".search li.active").html().replace(/&lt.*&gt;/, '');
+						$(this).parent().find("div.address_list").append(html);
+						$(this).parent().find(".search ul").html("");
+						$(this).val("");
+						$(this).parent().find(".search").hide();
+					} else {
+						email = $(this).val();
+						if (validate(email, 'email')) {
+							html = '<span title="' + email + '" class="lm_addr" onmousedown="return false" selected="0">' + email + ';</span>';
+							$(this).parent().find("div.address_list").append(html);
+							$(this).val("");
+						} else {
+							alert("邮件格式错误");
+						}
+					}
+					return false;
+					break
+				default:
+					var search = $(this).parent().find("div.search");
+					if ($(this).val().length > 1) {
+						$.getJSON("/contact/json2", {
+							key : $(this).val()
+						}, function(json) {
+							if (json.length) {
+								search.show();
+								search.children().html("");
+								$.each(json, function(i) {
+									search.children().append('<li><span title="' + json[i].email + '" emp_no="' + json[i].emp_no + '" onmousedown="return false" >' + json[i].name + '&lt;' + json[i].email + '&gt;;</span></li>')
+									search.children().children("li:first").addClass("active");
+								})
+							} else {
+								search.children().html("");
+								search.hide();
+							}
+						});
+					} else {
+						search.hide();
+					}
+			}
+		});
+	}); 
+</script>

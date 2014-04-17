@@ -1,0 +1,104 @@
+<layout name='Layout/layout_main' />
+<div class="msg">
+	<form method='post' id="form_data" name="form_data" enctype="multipart/form-data">
+		<input type="hidden" id="ajax" name="ajax" value="0">
+		<input type="hidden" id="add_file" name="add_file">
+		<input type="hidden" id="opmode" name="opmode" value="add">
+		<input type="hidden" id="recever_list" name="recever_list" value="{$sender.sender}|">
+		<h2> 会话：{$sender.sender_name} </h2>
+		<div class="operate">
+			<div class="left">
+				<a onclick="go_return_url()">返回</a>
+			</div>
+			<div class="right">
+				<a id="btn_reply" onclick="reply()">回复</a>
+				<a id="btn_send" style="display:none" onclick="save()">发送</a>
+			</div>
+		</div>
+		<table class="reply dis">
+			<tr>
+				<th  style="width:70px"> 内容： </th>
+				<td>				<textarea id="content" name="content" style="width:100%;height:120px;">
+                            </textarea></td>
+			</tr>
+			</tr>
+			<tr>
+				<th> 附件： </th>
+				<td>
+				<div class="hidden-phone">
+					<span id="spanButtonPlaceHolder"></span>
+				</div><div id="fsUploadProgress"></div></td>
+			</tr>
+		</table>
+	</form>
+	<foreach name="list" item="vo">
+		<div class="span-12  last" style="margin-bottom:24px;">
+			<div class="time text-center">
+				{$vo.create_time|toDate='Y-m-d h:m'}
+			</div>
+			<div class="span-10 btn text-left <eq name='vo.sender' value='$Think.session.emp_no' >right</eq>">
+				<div>
+					{$vo.content}
+				</div>
+				<div class="add_file span-10">
+					<include file="Layout:file_list" />
+				</div>
+			</div>
+		</div>
+	</foreach>
+</div>
+<script type="text/javascript" src="__PUBLIC__/editor/kindeditor.js"></script>
+<script type="text/javascript">
+	function reply() {
+		$(".reply").show();
+		$("#btn_reply").hide();
+		$("#btn_send").show();
+	}
+
+	// 加载编辑器
+	var editor;
+	$(function() {
+		editor = KindEditor.create("#content", {
+			resizeType : 1,
+			filterMode : true,
+			uploadJson : "/File/upload",
+			afterCreate : function() {
+				editor.width = "100%";
+			}
+		});
+	});
+	function save() {
+		editor.sync();
+		if (check_form("form_data")) {			
+			sendForm("form_data", "{:U('save')}");
+		}
+	}
+
+	function add() {
+		window.open("{:U('')}add/", "_self");
+	}
+
+	function btn_search() {
+		sendForm("form_search", "{:U('')}");
+		return false;
+	}
+
+	function del() {
+		if(confirm('确定要删除吗?')){
+			sendAjax("{:U('del')}", 'id=' + $("#msg_id").val(), function(data) {
+				if (data.status) {
+					alert(data.info);
+					$("input[name='doc_id']:checkbox:checked").each(function() {
+						$(this).parent().parent().hide();
+					})
+				}
+			});
+		}
+	}
+
+
+	$(document).ready(function() {
+		editor_init();
+		uploader_init();
+	}); 
+</script>
